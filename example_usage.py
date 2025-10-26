@@ -1,18 +1,28 @@
-from pycodefx import load_media, save_media, BlurEffect, CustomEffect
+from pycodefx import (
+    load_media, save_media, decompile_media, recompile_media,
+    BlurEffect, SharpenEffect, BrightnessEffect, CustomEffect, EffectChain
+)
 
-# Load an image or video
-media = load_media("input.png")  # Or "input.jpg", "input.mp4", etc.
+# Load an image
+media = load_media("input.png")
 
-# Apply a professional blur effect
-media.apply_effect(BlurEffect(ksize=10))
+# Decompile: get code, pixels, metadata
+decomp = decompile_media(media)
+pixels = decomp["pixels"]
+meta = decomp["metadata"]
 
-# Apply a custom effect (invert colors + noise)
-def crazy_effect(data):
-    import numpy as np
-    noise = np.random.randint(0, 50, data.shape, dtype=data.dtype)
-    return np.clip(255 - data + noise, 0, 255)
+# Apply chained effects (pro pipeline)
+effects = [
+    BlurEffect(ksize=10),
+    SharpenEffect(),
+    BrightnessEffect(value=50),
+    CustomEffect(lambda d: 255 - d, name="InvertColors"),
+]
+chain = EffectChain(effects)
+media.apply_effect(chain)
 
-media.apply_effect(CustomEffect(crazy_effect))
+# Recompile (optionally, you could recompile a modified pixel array)
+new_media = recompile_media(media.to_pixels(), media_type=meta.get("type", "image"), meta=meta)
 
-# Save to PNG, JPG, MP4, etc. as needed
-save_media(media, "output.png")
+# Save to PNG, JPG, MP4, etc.
+save_media(new_media, "output.png")

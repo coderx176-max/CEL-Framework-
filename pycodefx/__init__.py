@@ -1,22 +1,21 @@
 """
-PyCodeFX: Programmable Photo & Video Editing Framework
-
-Production-ready, extensible, and high-performance.
+PyCodeFX: Advanced, Extensible Media Editing Framework
 
 Features:
-- Load images and videos.
-- Edit content at pixel or binary level.
-- Apply built-in and custom effects.
-- Easy export to common formats (PNG, MP4, etc.).
-- Professional API and modular design.
+- Load, decompile, edit, and recompile images/videos.
+- Professional effect pipeline and plugin system.
+- Metadata and edit history tracking.
+- Format validation and error handling.
 """
-
 from .media import Media, ImageMedia, VideoMedia
-from .effects import Effect, BlurEffect, CustomEffect
-from .io import load_media, save_media
+from .effects import Effect, BlurEffect, CustomEffect, EffectChain, SharpenEffect, BrightnessEffect
+from .io import load_media, save_media, validate_format
+from .decompiler import decompile_media
+from .recompiler import recompile_media
 
 __all__ = [
     "Media", "ImageMedia", "VideoMedia",
-    "Effect", "BlurEffect", "CustomEffect",
-    "load_media", "save_media"
+    "Effect", "BlurEffect", "CustomEffect", "EffectChain", "SharpenEffect", "BrightnessEffect",
+    "load_media", "save_media", "validate_format",
+    "decompile_media", "recompile_media"
 ]
